@@ -6,12 +6,13 @@ Live demo for issue described here: https://stackoverflow.com/questions/70016975
 
 1. Create a new App Service 
 2. Configure the App Service to use .net 4.8 Runtime, 64-bit and set the app configuration `WEBSITE_FUSIONLOGGING_ENABLED=1`
-3. Try to open the website
-4. Notice the `HTTP Error 502.5 - ANCM Out-Of-Process Startup Failure` being reported
-5. Go to the Kudu of your app service `https://<yourappservice>.scm.azurewebsites.net/`
-6. Open a Debug console and inspect the stdout logs at `C:\home\site\wwwroot\logs`
-7. Notice that the reading of `Microsoft.AspNetCore.Hosting.Abstractions.dll` failed despite it being reported as existing in directory listing and through the FileInfo (see example blow)
-8. Try to launch the C:\home\site\wwwroot\AzureFileNotFound.exe through the debug console and notice the application starts up fine. 
+3. Deploy the application to your app service (I used Rider to deploy it)
+4. Try to open the website
+5. Notice the `HTTP Error 502.5 - ANCM Out-Of-Process Startup Failure` being reported
+6. Go to the Kudu of your app service `https://<yourappservice>.scm.azurewebsites.net/`
+7. Open a Debug console and inspect the stdout logs at `C:\home\site\wwwroot\logs`
+8. Notice that the reading of `Microsoft.AspNetCore.Hosting.Abstractions.dll` failed despite it being reported as existing in directory listing and through the FileInfo (see example blow)
+9. Try to launch the C:\home\site\wwwroot\AzureFileNotFound.exe through the debug console and notice the application starts up fine. 
 
 ## Example stdlog output
 ```
@@ -142,16 +143,12 @@ C:\home\site\wwwroot\System.Text.Encodings.Web.dll
 C:\home\site\wwwroot\System.Threading.Tasks.Extensions.dll
 C:\home\site\wwwroot\Web.config
 File does exist: C:\home\site\wwwroot\Microsoft.AspNetCore.Hosting.Abstractions.dll
-Rule: 
- Ref: Everyone
- Inherted: True
- Rights: DeleteSubdirectoriesAndFiles, Modify, Synchronize
-Rule: 
- Ref: BUILTIN\Administrators
- Inherted: True
- Rights: FullControl
-Readonly: False
-Length: 22904
+Failed to check file permissions: System.IO.FileNotFoundException: C:\home\site\wwwroot\Microsoft.AspNetCore.Hosting.Abstractions.dll
+   at System.Security.AccessControl.NativeObjectSecurity.CreateInternal(ResourceType resourceType, Boolean isContainer, String name, SafeHandle handle, AccessControlSections includeSections, Boolean createByName, ExceptionFromErrorCode exceptionFromErrorCode, Object exceptionContext)
+   at System.Security.AccessControl.FileSystemSecurity..ctor(Boolean isContainer, String name, AccessControlSections includeSections, Boolean isDirectory)
+   at System.Security.AccessControl.FileSecurity..ctor(String fileName, AccessControlSections includeSections)
+   at System.IO.File.GetAccessControl(String path)
+   at AzureFileNotFound.Program.DumpSystemInformation() in D:\Dev\Git\AzureFileNotFound\AzureFileNotFound\Program.cs:line 61
 Directory C:\home\site\wwwroot
 Assembly AzureFileNotFound, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 Assembly Location C:\home\site\wwwroot\AzureFileNotFound.exe
@@ -299,16 +296,12 @@ C:\home\site\wwwroot\System.Text.Encodings.Web.dll
 C:\home\site\wwwroot\System.Threading.Tasks.Extensions.dll
 C:\home\site\wwwroot\Web.config
 File does exist: C:\home\site\wwwroot\Microsoft.AspNetCore.Hosting.Abstractions.dll
-Rule: 
- Ref: Everyone
- Inherted: True
- Rights: DeleteSubdirectoriesAndFiles, Modify, Synchronize
-Rule: 
- Ref: BUILTIN\Administrators
- Inherted: True
- Rights: FullControl
-Readonly: False
-Length: 22904
+Failed to check file permissions: System.IO.FileNotFoundException: C:\home\site\wwwroot\Microsoft.AspNetCore.Hosting.Abstractions.dll
+   at System.Security.AccessControl.NativeObjectSecurity.CreateInternal(ResourceType resourceType, Boolean isContainer, String name, SafeHandle handle, AccessControlSections includeSections, Boolean createByName, ExceptionFromErrorCode exceptionFromErrorCode, Object exceptionContext)
+   at System.Security.AccessControl.FileSystemSecurity..ctor(Boolean isContainer, String name, AccessControlSections includeSections, Boolean isDirectory)
+   at System.Security.AccessControl.FileSecurity..ctor(String fileName, AccessControlSections includeSections)
+   at System.IO.File.GetAccessControl(String path)
+   at AzureFileNotFound.Program.DumpSystemInformation() in D:\Dev\Git\AzureFileNotFound\AzureFileNotFound\Program.cs:line 61
 Directory C:\home\site\wwwroot
 Assembly AzureFileNotFound, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 Assembly Location C:\home\site\wwwroot\AzureFileNotFound.exe

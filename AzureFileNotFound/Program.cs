@@ -58,7 +58,7 @@ namespace AzureFileNotFound
                 Console.WriteLine("File does exist: " + dll);
                 try
                 {
-                    var collection = File.GetAccessControl(Environment.CurrentDirectory)
+                    var collection = File.GetAccessControl(dll)
                         .GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
                     foreach (FileSystemAccessRule rule in collection)
                     {
